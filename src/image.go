@@ -21,5 +21,10 @@ func SaveImage(array [SIZE][SIZE]int) *image.Gray {
 		}
 	}
 
+	// for s := 0; s < SIZE; s++ {
+	// 	img.Set(s, SIZE/2, color.Gray{Y: 128})
+	// 	img.Set(SIZE/2, s, color.Gray{Y: 128})
+	// }
+
 	return img
 }
