@@ -10,8 +10,14 @@ import (
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		arr := mandelbrot.Generate()
+		points, zoom, err := mandelbrot.ParseParams(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		arr := mandelbrot.Generate(points, zoom)
 		img := mandelbrot.SaveImage(arr)
+
 		var buf bytes.Buffer
 		if err := png.Encode(&buf, img); err != nil {
 			http.Error(w, "Unable to encode image.", http.StatusInternalServerError)

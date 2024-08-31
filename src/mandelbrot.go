@@ -8,17 +8,16 @@ import (
 )
 
 const (
-	WIDTH          = 2000
-	HEIGHT         = 2000
+	SIZE           = 2000
 	MAX_ITERATIONS = 50
 	THRESHOLD      = 2.0
 	WORKER_COUNT   = 8
 )
 
-func Generate() [WIDTH][HEIGHT]int {
-	arr := [WIDTH][HEIGHT]int{}
+func Generate(center [2]float64, zoom float64) [SIZE][SIZE]int {
+	arr := [SIZE][SIZE]int{}
 	var wg sync.WaitGroup
-	rows := make(chan int, HEIGHT)
+	rows := make(chan int, SIZE)
 
 	// Start workers
 	for i := 0; i < WORKER_COUNT; i++ {
@@ -26,9 +25,9 @@ func Generate() [WIDTH][HEIGHT]int {
 		go func() {
 			defer wg.Done()
 			for y := range rows {
-				for x := 0; x < WIDTH; x++ {
-					xval := float64(x)/float64(WIDTH)*2.0 - 1.0
-					yval := float64(y)/float64(HEIGHT)*2.0 - 1.0
+				for x := 0; x < SIZE; x++ {
+					xval := float64(x)/float64(SIZE)*2.0 - 1.0
+					yval := float64(y)/float64(SIZE)*2.0 - 1.0
 					it := manderbrotFormula(complex(xval, yval), complex(0, 0), 0)
 					if it != nil {
 						arr[x][y] = *it
@@ -43,7 +42,7 @@ func Generate() [WIDTH][HEIGHT]int {
 	t := time.Now()
 
 	// Distribute work to workers
-	for y := 0; y < HEIGHT; y++ {
+	for y := 0; y < SIZE; y++ {
 		rows <- y
 	}
 	close(rows)

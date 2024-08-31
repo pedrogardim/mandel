@@ -5,7 +5,7 @@ import (
 	"image/color"
 )
 
-func SaveImage(array [WIDTH][HEIGHT]int) *image.Gray {
+func SaveImage(array [SIZE][SIZE]int) *image.Gray {
 	// Dimensions of the array
 	height := len(array)
 	width := len(array[0])
